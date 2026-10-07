@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Little Birthday Surprise 🎈</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(255, 105, 180, .18), transparent 28%),
+      radial-gradient(circle at 85% 20%, rgba(0, 210, 255, .16), transparent 30%),
+      radial-gradient(circle at 50% 90%, rgba(255, 215, 64, .12), transparent 35%),
+      #10121a;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  .page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 18px 60px;
+    position: relative;
+    isolation: isolate;
+  }
+
+  .glow {
+    position: fixed;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: .18;
+    z-index: -2;
+    pointer-events: none;
+  }
+  .g1 { background: #ff4f9a; left: -130px; top: 20%; }
+  .g2 { background: #23d5ff; right: -140px; top: 8%; }
+  .g3 { background: #ffd43b; left: 40%; bottom: -180px; }
+
+  .card {
+    width: min(900px, 100%);
+    border: 1px solid rgba(255,255,255,.13);
+    background: rgba(255,255,255,.075);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 30px;
+    padding: clamp(26px, 5vw, 55px);
+    box-shadow: 0 25px 80px rgba(0,0,0,.35);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .topline {
+    text-align: center;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    font-size: 11px;
+    opacity: .62;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: clamp(38px, 8vw, 72px);
+    line-height: .98;
+    margin: 0;
+    font-weight: 800;
+    letter-spacing: -.04em;
+    background: linear-gradient(90deg, #ff75b9, #ffd75a, #61e7ff, #a98bff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .subtitle {
+    text-align: center;
+    max-width: 580px;
+    margin: 18px auto 0;
+    color: rgba(255,255,255,.72);
+    line-height: 1.6;
+  }
+
+  .balloons {
+    height: 105px;
+    position: relative;
+    margin: 5px auto 0;
+    max-width: 570px;
+  }
+
+  .balloon {
+    position: absolute;
+    width: 50px; height: 62px;
+    border-radius: 52% 52% 48% 48%;
+    bottom: 13px;
+    box-shadow: inset -9px -7px 14px rgba(0,0,0,.13), inset 8px 6px 10px rgba(255,255,255,.18);
+    animation: float 4s ease-in-out infinite;
+  }
+  .balloon::before {
+    content:"";
+    position:absolute;
+    width: 8px; height: 8px;
+    left: 21px; bottom: -4px;
+    background: inherit;
+    transform: rotate(45deg);
+  }
+  .balloon::after {
+    content:"";
+    position:absolute;
+    left: 25px; top: 61px;
+    width: 1px; height: 45px;
+    background: rgba(255,255,255,.35);
+  }
+  .b1 { left: 8%; background:#ff5b8d; animation-delay: -.5s; transform: rotate(-8deg); }
+  .b2 { left: 25%; background:#ffd447; animation-delay: -1.7s; transform: rotate(5deg); }
+  .b3 { left: 44%; background:#42d9ff; animation-delay: -.9s; }
+  .b4 { left: 63%; background:#a77bff; animation-delay: -2.2s; transform: rotate(-5deg); }
+  .b5 { left: 81%; background:#52e09b; animation-delay: -1.2s; transform: rotate(8deg); }
+
+  @keyframes float {
+    0%,100% { margin-top: 0; }
+    50% { margin-top: -10px; }
+  }
+
+  .poem {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin: 0 auto;
+    transition: max-height 1s ease, opacity .8s ease, margin .8s ease;
+    max-width: 680px;
+    text-align: center;
+    line-height: 1.85;
+    color: rgba(255,255,255,.88);
+    font-size: clamp(15px, 2.5vw, 17px);
+  }
+  .poem.reveal {
+    max-height: 1800px;
+    opacity: 1;
+    margin: 35px auto 0;
+  }
+
+  .stanza {
+    margin: 0 0 25px;
+  }
+  .stanza strong {
+    display: inline-block;
+    color: #fff;
+    font-size: 1.06em;
+  }
+
+  .gift-area {
+    text-align: center;
+    margin-top: 38px;
+  }
+
+  .gift {
+    border: 0;
+    background: none;
+    cursor: pointer;
+    width: 130px;
+    height: 120px;
+    position: relative;
+    transition: transform .2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .gift:hover { transform: translateY(-5px) scale(1.04); }
+  .gift:active { transform: scale(.96); }
+
+  .box {
+    position: absolute;
+    width: 82px; height: 58px;
+    left: 24px; top: 48px;
+    background: linear-gradient(135deg,#ff4f8f,#ff6e67);
+    border-radius: 7px 7px 12px 12px;
+    box-shadow: 0 13px 30px rgba(255,79,143,.25);
+  }
+  .box::after {
+    content:"";
+    position:absolute;
+    left: 35px; top:0;
+    width: 12px; height: 58px;
+    background:#ffd84d;
+  }
+  .lid {
+    position:absolute;
+    left: 18px; top: 37px;
+    width: 94px; height: 20px;
+    background:#ff668a;
+    border-radius: 7px;
+    z-index: 2;
+    transition: transform .65s cubic-bezier(.2,.8,.2,1);
+  }
+  .lid::after {
+    content:"";
+    position:absolute;
+    left: 41px; top:-8px;
+    width:12px; height:36px;
+    background:#ffd84d;
+  }
+  .ribbon {
+    position:absolute;
+    left: 51px; top: 19px;
+    width: 28px; height: 28px;
+    border: 7px solid #ffd84d;
+    border-radius: 50% 50% 10% 50%;
+    transform: rotate(35deg);
+  }
+  .gift.open .lid { transform: translateY(-38px) rotate(-8deg); }
+  .gift-label {
+    display:block;
+    margin-top: 10px;
+    color: rgba(255,255,255,.65);
+    font-size: 12px;
+    letter-spacing:.05em;
+  }
+
+  .surprise {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height .7s ease, opacity .6s ease, margin .7s ease;
+    text-align: center;
+  }
+  .surprise.show {
+    max-height: 260px;
+    opacity: 1;
+    margin-top: 25px;
+  }
+  .surprise h2 {
+    margin: 0 0 9px;
+    font-size: clamp(24px, 5vw, 34px);
+  }
+  .surprise p {
+    margin: 0 auto;
+    max-width: 520px;
+    color: rgba(255,255,255,.72);
+    line-height:1.7;
+  }
+
+  .footer {
+    text-align:center;
+    margin-top: 35px;
+    font-size: 11px;
+    color: rgba(255,255,255,.38);
+  }
+
+  .confetti {
+    position: fixed;
+    width: 9px; height: 14px;
+    top: -20px;
+    z-index: 20;
+    pointer-events:none;
+    animation: fall linear forwards;
+  }
+  @keyframes fall {
+    to { transform: translate3d(var(--x), 110vh, 0) rotate(720deg); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+
+<main class="page">
+  <section class="card">
+    <div class="topline">a little birthday surprise</div>
+
+    <div class="balloons" aria-hidden="true">
+      <span class="balloon b1"></span>
+      <span class="balloon b2"></span>
+      <span class="balloon b3"></span>
+      <span class="balloon b4"></span>
+      <span class="balloon b5"></span>
+    </div>
+
+    <h1>Happy Birthday! 🎈</h1>
+    <p class="subtitle">Some friendships begin unexpectedly, grow through conversations, and leave behind a lot of things to be grateful for.</p>
+
+    <article class="poem">
+      <div class="stanza">
+        Hii! Good evening,<br>
+        We would say.<br>
+        Each time we connecting,<br>
+        That starts aur play.
+      </div>
+
+      <div class="stanza">
+        <strong>Wishing you a happy birthday,<br>
+        Wishing you a happy life,<br>
+        Wishing you a happy friendship,<br>
+        Wishing you a happy journey.</strong>
+      </div>
+
+      <div class="stanza">
+        The destiny begin from peer up,<br>
+        Continued on telegram classes.<br>
+        WhatsApp flourished it up,<br>
+        The conversations by masses.
+      </div>
+
+      <div class="stanza">
+        The learning quest was on,<br>
+        Be it grammar or so on.<br>
+        Sometimes self- discoveries,<br>
+        Other times casual talks.
+      </div>
+
+      <div class="stanza">
+        So much to learn,<br>
+        So much to experience,<br>
+        So much to earn,<br>
+        Got that all, it means.
+      </div>
+
+      <div class="stanza">
+        Great to know you,<br>
+        Great to meet you,<br>
+        Great to be friends with you,<br>
+        Great to be here.
+      </div>
+
+      <div class="stanza">
+        Thanks to you,<br>
+        For being a member.<br>
+        Wishing that you,<br>
+        Keep saying 'good slumber'.
+      </div>
+
+      <div class="stanza">Thanks ❤️</div>
+    </article>
+
+    <div class="gift-area">
+      <button class="gift" id="gift" aria-label="Open your birthday gift">
+        <span class="ribbon"></span>
+        <span class="lid"></span>
+        <span class="box"></span>
+        <span class="gift-label">Tap to open your surprise 🎁</span>
+      </button>
+
+      <div class="surprise" id="surprise">
+        <h2>One more thing… ✨</h2>
+        <p>May the next chapter bring you more laughter, more learning, more experiences — and plenty of reasons to say, “Good evening!”</p>
+      </div>
+    </div>
+
+    <div class="footer">Made with a poem, a little friendship, and way too many balloons.</div>
+  </section>
+</main>
+
+<script>
+const gift = document.getElementById('gift');
+const poem = document.querySelector('.poem');
+const surprise = document.getElementById('surprise');
+let opened = false;
+
+gift.addEventListener('click', () => {
+  if (opened) return;
+  opened = true;
+  gift.classList.add('open');
+  poem.classList.add('reveal');
+  setTimeout(() => surprise.classList.add('show'), 850);
+  launchConfetti();
+});
+
+function launchConfetti() {
+  const pieces = 150;
+  const colors = ['#ff5b8d','#ffd447','#42d9ff','#a77bff','#52e09b','#ffffff'];
+
+  for (let i = 0; i < pieces; i++) {
+    const piece = document.createElement('span');
+    piece.className = 'confetti';
+    piece.style.left = (45 + Math.random() * 10) + 'vw';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+    piece.style.width = (5 + Math.random() * 7) + 'px';
+    piece.style.height = (7 + Math.random() * 12) + 'px';
+    piece.style.animationDuration = (2.2 + Math.random() * 2.4) + 's';
+    piece.style.animationDelay = (Math.random() * .45) + 's';
+    piece.style.setProperty('--x', ((Math.random() - .5) * 110) + 'vw');
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 5200);
+  }
+}
+</script>
+</body>
+</html>
